@@ -30,7 +30,8 @@ public class LogEvent implements RequestHandler<SNSEvent, Object> {
 	@Override
 	public Object handleRequest(SNSEvent request, Context context) {
 
-		String userName = request.getRecords().get(0).getSNS().getMessage();
+		//String userName = request.getRecords().get(0).getSNS().getMessage();
+		String userName = "akshaypmurgod@gmail.com";
 		String token = UUID.randomUUID().toString();
 		this.initDynamoDbClient();
 		Item existUser = this.dynamo.getTable(TABLE_NAME).getItem("id", userName);
