@@ -24,8 +24,6 @@ public class LogEvent implements RequestHandler<SNSEvent, Object> {
 	private DynamoDB dynamo;
 	private final String TABLE_NAME = "csye6225";
 	private Regions REGION = Regions.US_EAST_1;
-	//static final String FROM = "murgod.a@husky.neu.edu";
-	//static final String FROM = "noreply@csye6225-spring2019-murgoda.me";
 	static final String FROM = System.getenv("fromaddr");
 	static final String SUBJECT = "Reset Password Link";
 	private String body;
@@ -34,20 +32,16 @@ public class LogEvent implements RequestHandler<SNSEvent, Object> {
 	public Object handleRequest(SNSEvent request, Context context) {
 
 		LambdaLogger logger = context.getLogger();
-		if(request.getRecords() == null)
-		{
-			System.out.println("No records found!");
+		if (request.getRecords() == null) {
 			logger.log("No records found!");
 			return null;
 		}
-		
-		System.out.println("-->Email= "+request.getRecords().get(0).getSNS().getMessage());
-		logger.log("-->Email= "+request.getRecords().get(0).getSNS().getMessage());
-		
-		System.out.println("SNS event=" +request);
-		System.out.println("Context=" +context);
-		
-		//String userName = "akshaypmurgod@gmail.com";
+
+		logger.log("Email= " + request.getRecords().get(0).getSNS().getMessage());
+
+		logger.log("SNS event=" + request);
+		logger.log("Context=" + context);
+
 		String userName = request.getRecords().get(0).getSNS().getMessage();
 		String token = UUID.randomUUID().toString();
 		this.initDynamoDbClient();
@@ -58,7 +52,7 @@ public class LogEvent implements RequestHandler<SNSEvent, Object> {
 					.withItem(new Item().withString("id", userName).withString("Token", token).withLong("TTl", 1200)));
 			this.body = "Password reset link here";
 		} else {
-			this.body = "Password reset link laready sent";
+			this.body = "Password reset link aready sent";
 		}
 		try {
 			Content subject = new Content().withData(SUBJECT);
@@ -70,7 +64,7 @@ public class LogEvent implements RequestHandler<SNSEvent, Object> {
 			AmazonSimpleEmailService client = AmazonSimpleEmailServiceClientBuilder.standard()
 					.withRegion(Regions.US_EAST_1).build();
 			client.sendEmail(emailRequest);
-			System.out.println("Email sent successfully!");
+			logger.log("Email sent successfully!");
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
