@@ -52,7 +52,7 @@ public class LogEvent implements RequestHandler<SNSEvent, Object> {
 					.withItem(new Item().withString("id", userName).withString("Token", token).withLong("TTl", 1200)));
 			this.body = "Password reset link here";
 		} else {
-			this.body = "Password reset link laready sent";
+			this.body = "Password reset link aready sent";
 		}
 		try {
 			Content subject = new Content().withData(SUBJECT);
@@ -64,7 +64,7 @@ public class LogEvent implements RequestHandler<SNSEvent, Object> {
 			AmazonSimpleEmailService client = AmazonSimpleEmailServiceClientBuilder.standard()
 					.withRegion(Regions.US_EAST_1).build();
 			client.sendEmail(emailRequest);
-			System.out.println("Email sent successfully!");
+			logger.log("Email sent successfully!");
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
