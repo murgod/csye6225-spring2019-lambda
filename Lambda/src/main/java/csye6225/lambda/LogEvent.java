@@ -25,7 +25,8 @@ public class LogEvent implements RequestHandler<SNSEvent, Object> {
 	private final String TABLE_NAME = "csye6225";
 	private Regions REGION = Regions.US_EAST_1;
 	//static final String FROM = "murgod.a@husky.neu.edu";
-	static final String FROM = "noreply@csye6225-spring2019-murgoda.me";
+	//static final String FROM = "noreply@csye6225-spring2019-murgoda.me";
+	static final String FROM = System.getenv("fromaddr");
 	static final String SUBJECT = "Reset Password Link";
 	private String body;
 
