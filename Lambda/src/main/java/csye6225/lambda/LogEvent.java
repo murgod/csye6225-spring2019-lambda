@@ -8,6 +8,7 @@ import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.document.spec.PutItemSpec;
 import com.amazonaws.services.lambda.runtime.Context;
+import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.SNSEvent;
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
@@ -23,15 +24,30 @@ public class LogEvent implements RequestHandler<SNSEvent, Object> {
 	private DynamoDB dynamo;
 	private final String TABLE_NAME = "csye6225";
 	private Regions REGION = Regions.US_EAST_1;
-	static final String FROM = "noreply@csye6225-spring2019-gadhiyah.me";
+	//static final String FROM = "murgod.a@husky.neu.edu";
+	static final String FROM = "noreply@csye6225-spring2019-murgoda.me";
 	static final String SUBJECT = "Reset Password Link";
 	private String body;
 
 	@Override
 	public Object handleRequest(SNSEvent request, Context context) {
 
-		//String userName = request.getRecords().get(0).getSNS().getMessage();
-		String userName = "akshaypmurgod@gmail.com";
+		LambdaLogger logger = context.getLogger();
+		if(request.getRecords() == null)
+		{
+			System.out.println("No records found!");
+			logger.log("No records found!");
+			return null;
+		}
+		
+		System.out.println("-->Email= "+request.getRecords().get(0).getSNS().getMessage());
+		logger.log("-->Email= "+request.getRecords().get(0).getSNS().getMessage());
+		
+		System.out.println("SNS event=" +request);
+		System.out.println("Context=" +context);
+		
+		//String userName = "akshaypmurgod@gmail.com";
+		String userName = request.getRecords().get(0).getSNS().getMessage();
 		String token = UUID.randomUUID().toString();
 		this.initDynamoDbClient();
 		Item existUser = this.dynamo.getTable(TABLE_NAME).getItem("id", userName);
