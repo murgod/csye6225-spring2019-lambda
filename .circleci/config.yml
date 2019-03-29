@@ -23,7 +23,7 @@ jobs:
             cd Lambda
             pwd
             ls -al
-            mvn package
+            mvn clean install
             cd target/
             ls -al
             cd ../
