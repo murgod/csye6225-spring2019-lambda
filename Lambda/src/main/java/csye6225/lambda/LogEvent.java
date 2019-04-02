@@ -41,7 +41,8 @@ public class LogEvent implements RequestHandler<SNSEvent, Object> {
 
 		logger.log("SNS event=" + request);
 		logger.log("Context=" + context);
-
+                logger.log("New Lambda deployment test");
+		
 		String userName = request.getRecords().get(0).getSNS().getMessage();
 		String token = UUID.randomUUID().toString();
 		this.initDynamoDbClient();
