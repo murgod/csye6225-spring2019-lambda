@@ -31,8 +31,8 @@ public class LogEvent implements RequestHandler<SNSEvent, Object> {
 	private String body;
 	int SECONDS_IN_20_MINUTES = 20 * 60;
     long secondsSinceEpoch = Instant.now().getEpochSecond(); //Long = 1450879900
-	long expirationTime = secondsSinceEpoch + SECONDS_IN_20_MINUTES;
-	//long expirationTime = secondsSinceEpoch + 10; // To test - 10 seconds
+	//long expirationTime = secondsSinceEpoch + SECONDS_IN_20_MINUTES;
+	long expirationTime = secondsSinceEpoch + 10; // To test - 10 seconds
 
 	@Override
 	public Object handleRequest(SNSEvent request, Context context) {
