@@ -41,8 +41,7 @@ public class LogEvent implements RequestHandler<SNSEvent, Object> {
 
 		logger.log("SNS event=" + request);
 		logger.log("Context=" + context);
-                logger.log("New Lambda deployment test");
-		
+ 		
 		String userName = request.getRecords().get(0).getSNS().getMessage();
 		String token = UUID.randomUUID().toString();
 		this.initDynamoDbClient();
@@ -50,7 +49,7 @@ public class LogEvent implements RequestHandler<SNSEvent, Object> {
 
 		if (existUser == null) {
 			this.dynamo.getTable(TABLE_NAME).putItem(new PutItemSpec()
-					.withItem(new Item().withString("id", userName).withString("Token", token).withLong("TTl", 1200)));
+					.withItem(new Item().withString("id", userName).withString("Token", token).withLong("TTL", 1200)));
 			this.body = "Password reset link here";
 		} else {
 			this.body = "Password reset link aready sent";
