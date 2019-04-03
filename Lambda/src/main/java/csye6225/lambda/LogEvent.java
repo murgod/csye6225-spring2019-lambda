@@ -50,7 +50,7 @@ public class LogEvent implements RequestHandler<SNSEvent, Object> {
 		if (existUser == null) {
 			this.dynamo.getTable(TABLE_NAME).putItem(new PutItemSpec()
 					.withItem(new Item().withString("id", userName).withString("Token", token).withLong("TTL", 1200)));
-			this.body = "Password reset link here";
+			this.body = "Password reset link here : \n https://csye6225-spring2019.com/reset?email=" + userName + "&token=" + token";
 		
 		try {
 			Content subject = new Content().withData(SUBJECT);
