@@ -1,7 +1,5 @@
 package csye6225.lambda;
 
-import java.time.Instant;
-import java.util.Date;
 import java.util.UUID;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
@@ -29,10 +27,6 @@ public class LogEvent implements RequestHandler<SNSEvent, Object> {
 	static final String FROM = System.getenv("fromaddr");
 	static final String SUBJECT = "Reset Password Link";
 	private String body;
-	int SECONDS_IN_20_MINUTES = 20 * 60;
-    long secondsSinceEpoch = Instant.now().getEpochSecond(); //Long = 1450879900
-	//long expirationTime = secondsSinceEpoch + SECONDS_IN_20_MINUTES;
-	long expirationTime = secondsSinceEpoch + 10; // To test - 10 seconds
 
 	@Override
 	public Object handleRequest(SNSEvent request, Context context) {
@@ -47,7 +41,6 @@ public class LogEvent implements RequestHandler<SNSEvent, Object> {
 
 		logger.log("SNS event=" + request);
 		logger.log("Context=" + context);
-		logger.log("TTL expirationTime=" + expirationTime);
  		
 		String userName = request.getRecords().get(0).getSNS().getMessage();
 		String token = UUID.randomUUID().toString();
@@ -56,11 +49,9 @@ public class LogEvent implements RequestHandler<SNSEvent, Object> {
 
 		if (existUser == null) {
 			this.dynamo.getTable(TABLE_NAME).putItem(new PutItemSpec()
-					.withItem(new Item().withString("id", userName).withString("Token", token).withLong("TTL", expirationTime)));
+					.withItem(new Item().withString("id", userName).withString("Token", token).withLong("TTL", 1200)));
 			this.body = "Password reset link here";
-		} else {
-			this.body = "Password reset link aready sent";
-		}
+		
 		try {
 			Content subject = new Content().withData(SUBJECT);
 			Content textbody = new Content().withData(body);
@@ -75,6 +66,7 @@ public class LogEvent implements RequestHandler<SNSEvent, Object> {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+	}
 		return null;
 	}
 
