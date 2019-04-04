@@ -51,7 +51,9 @@ public class LogEvent implements RequestHandler<SNSEvent, Object> {
 			this.dynamo.getTable(TABLE_NAME).putItem(new PutItemSpec()
 					.withItem(new Item().withString("id", userName).withString("Token", token).withLong("TTL", 1200)));
 			this.body = "Password reset link here";
-		
+		}else {
+                        this.body = "Password reset link aready sent";
+                }		
 		try {
 			Content subject = new Content().withData(SUBJECT);
 			Content textbody = new Content().withData(body);
