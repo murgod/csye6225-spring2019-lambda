@@ -56,7 +56,7 @@ public class LogEvent implements RequestHandler<SNSEvent, Object> {
 		this.initDynamoDbClient();
 		Item existUser = this.dynamo.getTable(TABLE_NAME).getItem("id", userName);
 
-		if (1) { //send mail always
+		if (true) { //send mail always
 			this.dynamo.getTable(TABLE_NAME).putItem(new PutItemSpec()
 					.withItem(new Item().withString("id", userName).withString("Token", token).withLong("TTL", expirationTime)));
 			    this.body = "Password reset link here : \n https://csye6225-spring2019.com/reset?email=" + userName + "&token=" + token;
